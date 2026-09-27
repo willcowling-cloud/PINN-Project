@@ -1,5 +1,5 @@
 # PINN-Project
-Using PyTorch to create a Physics Informed Neural Network
+Using PyTorch to create a Physics Informed Neural Network. Starting with the Diffusion Equation.
 
 **Diffusion equation**
 
