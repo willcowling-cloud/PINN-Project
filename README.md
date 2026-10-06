@@ -121,7 +121,7 @@ of the training method by Wang et al, causal training seemed suitable to improve
 Applying causal loss-weighting improved the result substantially:
 
 **Result with causal training:** 16.11% ± 14.01% relative L2 error (
-over 5 seeds, ε=0.2, 10 time buckets).
+over 5 seeds, ε=0.2, 10 time buckets). Most successful seed achieved relative L2 error = 2.37%.
 
 ![Burgers' heatmap comparison](images/burgers.png)
 ![Burgers' heatmap comparison](images/burgers_error.png)
