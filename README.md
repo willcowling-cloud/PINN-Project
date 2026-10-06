@@ -76,10 +76,11 @@ has little incentive to fit the later time points due their small magnitude.
 The error map below shows the relative error between the PINN and the exact solution. 
 
 <p align="center">
-  <img src="images/heat_no_source.png" width="60%">
-  <img src="images/heat_no_source_error.png" width="30%">
+  <img src="images/heat_no_source.png" height="300">
+  <img src="images/heat_no_source_error.png" height="300">
 </p>
-![Diffusion no-source error map](images/heat_no_source_error.png)
+
+
 
 ### Causal training investigation
 
