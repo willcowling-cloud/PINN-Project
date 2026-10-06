@@ -47,7 +47,7 @@ notebooks/
 
 ---
 
-## 1. Diffusion equation (with source)
+## 1. Heat equation (with source)
 
 $$u_t - u_{xx} = e^{-t}\left(\sin(\pi x) - \pi^2 \sin(\pi x)\right), \quad x \in [-1,1],\ t \in [0,1]$$
 $$u(-1,t) = u(1,t) = 0, \qquad u(x,0) = \sin(\pi x)$$
@@ -60,7 +60,7 @@ training converges reliably.
 
 **Result:** [X]% relative L2 error (Adam + L-BFGS, [N] collocation points).
 
-![Diffusion with source result](images/diffusion_source_heatmap.png)
+![Diffusion with source result](images/heat_source.png)
 
 ---
 
