@@ -30,17 +30,19 @@ Three PDEs were solved, each introducing a new challenge:
 ### Project structure
 ```
 src/
-  model.py          # PINN architecture, derivative computation, loss functions
-  model_causal.py   # PINN variant with causal loss-weighting
-  data.py           # boundary/initial/collocation point generation
+  model.py          # PINN architecture, derivative calculation, total loss function
+  model_causal.py   # model.py variant with causal loss-weighting
+  data.py           # boundary/initial/collocation point generating functions
   train.py           # training loop (Adam + L-BFGS)
-  train_causal.py    # training loop with causal weighting
-  evaluate.py        # exact solutions, relative error metric
-  visualize.py        # animation utilities
+  train_causal.py    # train.py variant with causal loss-weighting
+  evaluate.py        # exact solutions, relative error function
+  visualize.py        # animation utilities (created using Claude AI)
 notebooks/
-  diffusion_with_source.ipynb
-  diffusion_no_source.ipynb
-  burgers_equation.ipynb
+  heat_with_source.ipynb
+  heat_no_source.ipynb
+  Burger's_equation.ipynb
+data/
+   burgers_shock.mat   # benchmark reference solution from Raissi et al.'s original PINN paper
 ```
 
 ---
@@ -52,11 +54,10 @@ $$u(-1,t) = u(1,t) = 0, \qquad u(x,0) = \sin(\pi x)$$
 
 Exact solution: $u(x,t) = e^{-t}\sin(\pi x)$.
 
-This PDE served as the initial baseline. The manufactured source term gives the
-network a strong, spatially-varying training signal throughout the domain, and
-training converges reliably.
+This PDE served as the initial baseline. The function is smooth. The source term gives the solution a slower exponential decay.
+Training converges reliably.
 
-**Result:** [0.258]% relative L2 error (Adam + L-BFGS, [10000] collocation points).
+**Result:** 0.258% relative L2 error (Adam + L-BFGS, 10000 collocation points).
 
 ![Diffusion with source result](images/heat_source.png)
 
@@ -70,32 +71,23 @@ $$u(-1,t) = u(1,t) = 0, \qquad u(x,0) = \sin(\pi x)$$
 Exact solution: $u(x,t) = e^{-\pi^2 t}\sin(\pi x)$ — decaying roughly 10x faster
 than the source case.
 
-This case exposed a known PINN failure mode: because the solution decays so
-quickly, most of the time domain has near-zero target magnitude, giving the
-optimizer little incentive to fit the late-time region accurately. The error
-map below shows the network satisfying the loss well on average while failing
-to respect the boundary condition and propagate the solution correctly at
-later times.
+This case exposed a known PINN difficulty: due to the fast exponential decay the optimiser
+has little incentive to fit the later time points due their small magnitude. 
+The error map below shows the relative error between the PINN and the exact solution. 
 
 ![Diffusion no-source error map](images/heat_no_source_error.png)
 
 ### Causal training investigation
 
-**Causal training** addresses this by weighting the PDE loss so that later
-time-regions only contribute once earlier regions have converged — forcing
-training to proceed sequentially through time, following Wang et al.,
-*"Respecting Causality for Training Physics-Informed Neural Networks."*
-Implemented here by bucketing collocation points by time and scaling each
-bucket's loss by `exp(-ε · cumulative loss of earlier buckets)`.
+**Causal training** following Wang et al.,
+*"Respecting Causality for Training Physics-Informed Neural Networks."* the PDE loss
+becomes weighted so that later time regions only contribute to the loss once earlier regions
+have converged. Implemented by splitting the collocation points into bucketed time regions and multiplying 
+each buckets loss by `exp(-ε · cumulative loss of earlier buckets)`.
 
-**Finding:** causal training did not produce a reliable improvement over the
-uniform-weighted baseline for this equation ([X]% vs [X]%). Diffusion is a
-naturally smoothing PDE, and the baseline was already achieving low error by
-the time causal training was tested — likely leaving little headroom for a
-causality fix to improve on. A fixed (non-annealed) ε and hard bucket
-boundaries, rather than the smoothly-varying weighting used in the original
-method, may also have limited its effectiveness. Full investigation (N-
-collocation, bucket-count, and ε sweeps) is in `notebooks/diffusion_no_source.ipynb`.
+**Finding:** causal training did not result in noticeable improvement for this equation
+(0.718% vs 0.622%). This is most likely due to the heat equation solution being smooth with no discontinuities, 
+as well as the already low error before testing.
 
 ---
 
@@ -108,8 +100,8 @@ $$u(-1,t) = u(1,t) = 0, \qquad u(x,0) = -\sin(\pi x)$$
 shock.)
 
 Burgers' equation has no closed-form solution; results are validated against
-the benchmark reference solution from Raissi et al.'s original PINN paper
-(`burgers_shock.mat`), spectrally computed.
+the computed benchmark reference solution from Raissi et al.'s original PINN paper
+(`burgers_shock.mat`).
 
 ### Shock formation
 
@@ -136,28 +128,14 @@ over [N] seeds, ε=[X], [N] buckets).
 
 ![Burgers' shock animation](images/burgers_exact.gif)
 ![Burgers' shock animation](images/burgers_predicted.gif)
-
-### Other approaches tried
-
-- **Truncated-normal collocation biasing** (concentrating points near $x=0$):
-  did not improve results — the shock's true physical width (~$\nu$) is far
-  narrower than any tested distribution spread.
-- **Residual-adaptive refinement (RAR):** did not improve results, likely due
-  to early-training residuals being an unreliable signal for where to add
-  points before the network has learned anything useful to refine around.
-
 ---
 
-## Limitations & future work
+## Future work
 
-- Burgers' results show non-trivial run-to-run variance; reported figures are
-  averaged over [N] seeds, but a more principled treatment (e.g. annealed ε,
-  smooth time-weighting) would likely reduce this further.
-- Extending to a 2D spatial domain (e.g. 2D heat equation) would better
-  demonstrate PINNs' mesh-free advantage over classical solvers.
-- A natural next step beyond this project is the Navier-Stokes equations,
-  for which Burgers' equation (sharing the same nonlinear advection +
-  diffusion structure) serves as a useful 1D stepping stone.
+- For each equation, testing over more seeds using different starting parameters,
+and investigating standard deviation. 
+- Extending to a 2D spatial domain (e.g. 2D heat equation)
+- Navier-Stokes equations would be interesting to study using this PINN architecture
 
 ## References
 
