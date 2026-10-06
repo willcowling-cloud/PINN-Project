@@ -63,7 +63,7 @@ Training converges reliably.
 
 ---
 
-## 2. Diffusion equation (no source)
+## 2. Heat equation (no source)
 
 $$u_t = u_{xx}, \quad x \in [-1,1],\ t \in [0,1]$$
 $$u(-1,t) = u(1,t) = 0, \qquad u(x,0) = \sin(\pi x)$$
@@ -75,6 +75,10 @@ This case exposed a known PINN difficulty: due to the fast exponential decay the
 has little incentive to fit the later time points due their small magnitude. 
 The error map below shows the relative error between the PINN and the exact solution. 
 
+<p align="center">
+  <img src="images/heat_no_source.png" width="60%">
+  <img src="images/heat_no_source_error.png" width="30%">
+</p>
 ![Diffusion no-source error map](images/heat_no_source_error.png)
 
 ### Causal training investigation
