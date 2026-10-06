@@ -104,7 +104,7 @@ the computed benchmark reference solution from Raissi et al.'s original PINN pap
 (`burgers_shock.mat`).
 
 ### Shock formation
-A discontinuity forms in the solution at $x=0$, at a time of $t \approx 0.32$. This
+A discontinuity forms in the solution at $x=0$, at a time of $t \approx 0.3s$. This
 is very difficult for the PINN to fit to, hence the large vertical error band at $x=0$. 
 
 **Baseline result:** 22.976% relative L2 error (uniform collocation sampling, 10000 collocation points).
