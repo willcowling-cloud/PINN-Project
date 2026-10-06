@@ -9,24 +9,22 @@ architecture, derivative computation, and training loop are all independent of
 which PDE is being solved. New equations are added by writing a small residual
 function, not by modifying the model.
 
-**Repo:** [GitHub link]
-
 ---
 
 ## Overview
 
-| Equation | Relative L2 Error | Notes |
+| Equation | Relative L2 Error Achieved | Notes |
 |---|---|---|
-| Heat equation (with source) | [X]% | Baseline case |
-| Heat equation (no source) | [X]% | Known PINN failure mode — see below |
-| Burgers' equation (shock) | [X]% ± [X]% | Causal training applied |
+| Heat equation (with source) | [0.258]% | Baseline case |
+| Heat equation (no source) | [0.618]% | Known PINN difficulty — see below |
+| Burgers' equation (shock) | [2.37]% | Causal training applied |
 
 Three PDEs were solved, each introducing a new challenge:
-1. A forced diffusion equation, as a baseline sanity check.
-2. An unforced diffusion equation with fast exponential decay — a known
+1. Heat equation with source, as a first test.
+2. Heat equation no source - fast exponential decay — a known
    PINN difficulty, investigated via causal loss-weighting.
 3. The nonlinear, shock-forming Burgers' equation — validated against the
-   benchmark reference from Raissi et al.'s original PINN paper, and improved
+   benchmark reference from Raissi et al.'s original PINN paper. Relative error improved
    significantly using causal training.
 
 ### Project structure
@@ -58,7 +56,7 @@ This PDE served as the initial baseline. The manufactured source term gives the
 network a strong, spatially-varying training signal throughout the domain, and
 training converges reliably.
 
-**Result:** [X]% relative L2 error (Adam + L-BFGS, [N] collocation points).
+**Result:** [0.258]% relative L2 error (Adam + L-BFGS, [10000] collocation points).
 
 ![Diffusion with source result](images/heat_source.png)
 
@@ -79,7 +77,7 @@ map below shows the network satisfying the loss well on average while failing
 to respect the boundary condition and propagate the solution correctly at
 later times.
 
-![Diffusion no-source error map](images/diffusion_no_source_error_map.png)
+![Diffusion no-source error map](images/heat_no_source_error.png)
 
 ### Causal training investigation
 
@@ -134,9 +132,10 @@ improved the result substantially:
 **Result with causal training:** [X]% ± [X]% relative L2 error (mean ± std
 over [N] seeds, ε=[X], [N] buckets).
 
-![Burgers' heatmap comparison](images/burgers_heatmap.png)
+![Burgers' heatmap comparison](images/burgers.png)
 
-![Burgers' shock animation](images/burgers_shock_animation.gif)
+![Burgers' shock animation](images/burgers_exact.gif)
+![Burgers' shock animation](images/burgers_predicted.gif)
 
 ### Other approaches tried
 
