@@ -112,7 +112,7 @@ is very difficult for the PINN to fit to, hence the large vertical error band at
 ### Causal training
 
 Due to the poorly behaved nature of the Burgers solution, and the fact that it was the original application
-of the training method by Wang et al, causal training seemed suitable to improve our error here. 
+of the training method by Wang et al, causal training seemed suitable to improve the large error here. 
 Applying causal loss-weighting improved the result substantially:
 
 **Result with causal training:** 16.11% ± 14.01% relative L2 error (
@@ -120,9 +120,6 @@ over 5 seeds, ε=0.2, 10 time buckets).
 
 ![Burgers' heatmap comparison](images/burgers.png)
 ![Burgers' heatmap comparison](images/burgers_error.png)
-
-![Burgers' heatmap comparison](images/Burgers_exact.gif)
-![Burgers' heatmap comparison](images/Burgers_predicted.gif)
 ---
 
 ## Future work
