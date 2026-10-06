@@ -1,13 +1,13 @@
 # Physics-Informed Neural Networks (PINNs)
 
-A PyTorch implementation of Physics-Informed Neural Networks for solving partial
-differential equations using automatic differentiation — no labelled interior
-data required, only the PDE itself and boundary/initial conditions.
+A PyTorch implementation of a Physics-Informed Neural Network for solving partial
+differential equations using automatic differentiation and no labelled interior
+data required. Only the PDE itself and boundary/initial conditions are used to train
+the Neural Network. 
 
-This project is built around a reusable, equation-agnostic core: the network
-architecture, derivative computation, and training loop are all independent of
-which PDE is being solved. New equations are added by writing a small residual
-function, not by modifying the model.
+The network architecture, derivative computation, and training loop are all independent of
+which PDE is being solved. A new PDE can be added by writing a residual function as well
+as any boundary/initial conditions. 
 
 ---
 
@@ -15,9 +15,9 @@ function, not by modifying the model.
 
 | Equation | Relative L2 Error Achieved | Notes |
 |---|---|---|
-| Heat equation (with source) | [0.258]% | Baseline case |
-| Heat equation (no source) | [0.618]% | Known PINN difficulty — see below |
-| Burgers' equation (shock) | [2.37]% | Causal training applied |
+| Heat equation (with source) | 0.258% | Baseline case |
+| Heat equation (no source) | 0.618% | Known PINN difficulty — see below |
+| Burgers' equation (shock) | 2.37% | Causal training applied |
 
 Three PDEs were solved, each introducing a new challenge:
 1. Heat equation with source, as a first test.
@@ -121,9 +121,8 @@ over 5 seeds, ε=0.2, 10 time buckets).
 ![Burgers' heatmap comparison](images/burgers.png)
 ![Burgers' heatmap comparison](images/burgers_error.png)
 
-
-![Burgers' shock animation](images/burgers_exact.gif)
-![Burgers' shock animation](images/burgers_predicted.gif)
+![Burgers' heatmap comparison](images/Burgers_exact.gif)
+![Burgers' heatmap comparison](images/Burgers_predicted.gif)
 ---
 
 ## Future work
