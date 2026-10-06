@@ -121,8 +121,8 @@ over 5 seeds, ε=0.2, 10 time buckets).
 ![Burgers' heatmap comparison](images/burgers.png)
 ![Burgers' heatmap comparison](images/burgers_error.png)
 <p align="center">
-  <img src="images/Burgers_predicted.gif" width="45%">
   <img src="images/Burgers_exact.gif" width="45%">
+  <img src="images/Burgers_predicted.gif" width="45%">
 </p>
 
 ---
