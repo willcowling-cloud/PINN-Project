@@ -104,27 +104,23 @@ the computed benchmark reference solution from Raissi et al.'s original PINN pap
 (`burgers_shock.mat`).
 
 ### Shock formation
+A discontinuity forms in the solution at $x=0$, at a time of $t \approx 0.32$. This
+is very difficult for the PINN to fit to, hence the large vertical error band at $x=0$. 
 
-The initial condition's odd symmetry about $x=0$ forces the shock to form
-exactly at $x=0$, with a predicted formation time of $t \approx 1/\pi \approx 0.32$
-for the inviscid case. The error map below shows both effects clearly: a
-sharp vertical error band at $x=0$, and a wedge-shaped pattern below $t
-\approx 0.32$ tracing the characteristic curves converging toward the shock.
-
-**Baseline result:** [X]% relative L2 error (uniform collocation sampling,
-[N] points).
+**Baseline result:** 22.976% relative L2 error (uniform collocation sampling, 10000 collocation points).
 
 ### Causal training
 
-Given Burgers' equation is the original benchmark case for causal training in
-the literature — and, unlike diffusion, involves genuine nonlinear advection —
-it was a stronger candidate for the method. Applying causal loss-weighting
-improved the result substantially:
+Due to the poorly behaved nature of the Burgers solution, and the fact that it was the original application
+of the training method by Wang et al, causal training seemed suitable to improve our error here. 
+Applying causal loss-weighting improved the result substantially:
 
-**Result with causal training:** [X]% ± [X]% relative L2 error (mean ± std
-over [N] seeds, ε=[X], [N] buckets).
+**Result with causal training:** 16.11% ± 14.01% relative L2 error (
+over 5 seeds, ε=0.2, 10 time buckets).
 
 ![Burgers' heatmap comparison](images/burgers.png)
+![Burgers' heatmap comparison](images/burgers_error.png)
+
 
 ![Burgers' shock animation](images/burgers_exact.gif)
 ![Burgers' shock animation](images/burgers_predicted.gif)
@@ -132,10 +128,10 @@ over [N] seeds, ε=[X], [N] buckets).
 
 ## Future work
 
-- For each equation, testing over more seeds using different starting parameters,
-and investigating standard deviation. 
-- Extending to a 2D spatial domain (e.g. 2D heat equation)
-- Navier-Stokes equations would be interesting to study using this PINN architecture
+- For each equation, investigating how to reduce training randomness between different seeds
+  with different starting parameters. 
+- Extending to a 2D spatial domain (e.g. 2D heat equation).
+- Navier-Stokes equations would be interesting to study using this PINN architecture.
 
 ## References
 
