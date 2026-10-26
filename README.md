@@ -17,7 +17,7 @@ as any boundary/initial conditions.
 |---|---|---|
 | Heat equation (with source) | 0.258% | Baseline case |
 | Heat equation (no source) | 0.618% | Known PINN difficulty — see below |
-| Burgers' equation (shock) | 2.37% | Causal training applied |
+| Burgers' equation (shock) | 5.65% | Causal training applied |
 
 Three PDEs were solved, each introducing a new challenge:
 1. Heat equation with source, as a first test.
