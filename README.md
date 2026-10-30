@@ -107,13 +107,13 @@ Burgers' equation has no closed-form solution; results are validated against the
 
 ### Shock formation
 
-A steep gradient develops around $x=0$, at approximately $t=0.3$. This sharp transition is particularly difficult for PINNs to reproduce accurately, resulting in a large vertical band of prediction error.
+A steep gradient develops around $x=0$, at approximately $t=0.3$. This discontinuity is particularly difficult for PINNs to reproduce accurately, resulting in a large vertical band of prediction relative error.
 
 ### Baseline performance
 
-Initial experiments using uniform random collocation-point sampling produced a relative L2 error of 22.976%.
+Initial experiments using uniform random collocation point sampling produced a relative L2 error of 22.976%.
 
-Further testing across five different collocation-point seeds revealed substantial variation in performance, with a mean relative L2 error of **27.48% ± 26.64%** (10,000 collocation points).
+Further testing across five different collocation point seeds revealed large variations in the PINNs performance, with a mean relative L2 error of **27.48% ± 26.64%** (10,000 collocation points).
 
 ### Improving training performance
 
@@ -121,11 +121,11 @@ Given the difficulty of resolving the steep shock, I investigated two approaches
 
 **1. Latin Hypercube Sampling (LHS)**
 
-I implemented LHS to improve the distribution of collocation points across the spatial-temporal domain. This reduced the mean relative L2 error from 27.48% to **17.14% ± 12.53%** across five seeds.
+I implemented LHS to even out the distribution of collocation points across the x-t domain. This reduced the mean relative L2 error from 27.48% to **17.14% ± 12.53%** across five seeds.
 
 **2. Causal training**
 
-I then implemented causal loss-weighting, following the approach proposed by Wang et al. This method prioritises learning earlier time regions before later ones, encouraging the network to respect the temporal evolution of the solution.
+I then implemented causal loss-weighting, using the same approach that I had attempted for the heat equation. This method shows more promise for fixing this PINN failure mode as it should force the PINN to accurately capture the smooth part of the solution before the shock wave forms.
 
 Using causal training (ε = 0.2, 10 time buckets) reduced the mean relative L2 error to **5.65% ± 3.52%** across five seeds. The best result in this experiment was 2.26%.
 
@@ -133,9 +133,9 @@ Using causal training (ε = 0.2, 10 time buckets) reduced the mean relative L2 e
 
 Finally, I investigated whether combining LHS sampling with causal training would produce further improvements.
 
-Interestingly, the combination increased the mean relative L2 error to **8.67% ± 4.17%**, compared with 5.65% using causal training with uniform sampling alone.
+Interestingly, the combination increased the mean relative L2 error to **8.67% ± 4.17%**, compared with 5.65% using causal training with uniform random sampling alone.
 
-These experiments demonstrate that collocation-point placement has a substantial influence on PINN performance, particularly for solutions containing steep gradients. While LHS improved standard PINN performance, causal training provided the largest overall improvement, and combining the two approaches did not produce an additive benefit.
+These experiments demonstrate that collocation point placement has a substantial influence on PINN performance, particularly for solutions containing sharp gradients. While LHS improved standard PINN performance, causal training provided the largest overall improvement and combining the two approaches did not produce any additional benefit.
 
 ![Burgers' heatmap comparison](images/burgers.png)
 ![Burgers' heatmap comparison](images/burgers_error.png)
