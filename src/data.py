@@ -1,5 +1,4 @@
 import torch
-import torch.nn as nn
 
 def generate_boundary_points(n_points):
     bp_left_column = (torch.randint(0,2,(n_points,1))*2 -1).float()
@@ -30,4 +29,21 @@ def generate_collocation_points_shock(n_points, n_points_centered, std):
         col_right_column = torch.rand((n_points,1))
         col_points = torch.cat((col_left_column,col_right_column),dim=1)
         return col_points
+
+def generate_collocation_points_lhs(n_points):
+    # Create one random point in each of n_points intervals
+    x = (torch.arange(n_points).reshape(-1, 1)
+         + torch.rand((n_points, 1))) / n_points
+
+    t = (torch.arange(n_points).reshape(-1, 1)
+         + torch.rand((n_points, 1))) / n_points
+
+    # Independently shuffle the intervals assigned to x and t
+    x = x[torch.randperm(n_points)]
+    t = t[torch.randperm(n_points)]
+
+    # Scale x from [0, 1] to [-1, 1]; t remains in [0, 1]
+    x = 2 * x - 1
+
+    return torch.cat((x, t), dim=1)
 
